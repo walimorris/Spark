@@ -2,7 +2,7 @@ package com.morris.sparked.models;
 
 /**
  * Just a POJO expressing Coffee available at Seattle Coffee Works.
- * You can find Seattle Coffee Works here : [See Seattle Coffee Works](https://www.seattlecoffeeworks.com/)
+ * You can find Seattle Coffee Works here : https://www.seattlecoffeeworks.com/
  *
  * @author wmm<walimmorris@gmail.com>
  */
