@@ -74,10 +74,16 @@ public class SeattleCoffeeData implements Serializable {
         dataset.show(5);
         dataset.printSchema();
 
+        // Shows how to create a new sub dataset from filtering. 
+        System.out.println("Filter dataset to only show coffee from farmer Geremewe Addisu");
+        Dataset<Coffee> farmerset = dataset.filter(dataset.col("farmer").contains("Geremewe Addisu"));
+        farmerset.show();
+        farmerset.printSchema();
+
         // Shows how to easily convert coffee dataset back to a dataframe
         Dataset<Row> dataframe2 = dataset.toDF();
         System.out.println("\n ***Converting back to a Dataframe ***");
-        dataframe.show(5);
-        dataframe.printSchema();
+        dataframe2.show(5);
+        dataframe2.printSchema();
     }
 }
