@@ -1,5 +1,6 @@
 package com.morris.sparked.trickymaps;
 
+import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
@@ -8,6 +9,8 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Utilizes {@link AdditionsMapper} and {@link AdditionsForeach} in order to
@@ -55,6 +58,16 @@ public class MapAdditions implements Serializable {
         }
     }
 
+    private class AdditionsFlatMap implements FlatMapFunction<Row, String> {
+        private static final long serialVersionUID = 3L;
+
+        @Override
+        public Iterator<String> call(Row row) throws Exception {
+            String[] num = row.getAs("number").toString().split(",");
+            return Arrays.stream(num).iterator();
+        }
+    }
+
     public void start() {
         /* Initiate new spark session on local */
         sparksession = SparkSession.builder()
@@ -87,5 +100,11 @@ public class MapAdditions implements Serializable {
 
         /* Utilize AdditionsForeach method to print each number to stdOut */
         updatedAdditionsDf.foreach(new AdditionsForeach());
+
+        /* View the numbers utilizing AdditionsFlatMap method */
+        Dataset<String> flatMapDf = initialAdditionsDf.flatMap(new AdditionsFlatMap(),
+                Encoders.STRING());
+        System.out.println("*** Show Initial Dataframe utilizing AdditionsFlatMap ***");
+        flatMapDf.show();
     }
 }
